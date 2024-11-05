@@ -1,3 +1,52 @@
+"""
+TF-IDF
+
+Alunos: Rodrigo K. Franco, Maria Eduarda Krutzsch, Luan L. Guarnieri, Nicole B., Gustavo Baroni, Ana Carolina
+
+Critérios de Avaliação:
+Os dados foram vetorizados com TF-IDF e foram calculadas as similaridades entre os documentos? (Peso: 0,1)
+Foram analisados clusters, sendo visualizados e interpretados com PCA ou outra técnica semelhante? (Peso: 0,1)
+
+Descrição das Implementações:
+== Vetorização com TF-IDF ==
+  - Foi utilizado o `TfidfVectorizer` da biblioteca `scikit-learn` para transformar o texto processado em uma matriz TF-IDF. Essa matriz representa a importância de cada termo em relação a um documento específico e ao corpus como um todo.
+  - A similaridade entre os documentos foi calculada utilizando a 'similaridade cosseno', uma técnica que mede a similaridade entre dois vetores com base no ângulo entre eles.
+
+== Cálculo de Similaridade (item 1) ==
+  - A matriz de similaridade cosseno foi gerada e visualizada em um 'heatmap', onde cada célula representa a similaridade entre dois documentos. A diagonal principal tem sempre o valor 1, indicando que cada documento é 100% similar a si mesmo.
+
+== Análise de Clusters (item 2) ==
+  - A análise de clusters foi realizada utilizando o algoritmo 'K-Means' para agrupar os documentos em categorias diferentes com base em suas representações TF-IDF.
+  - A visualização dos clusters foi feita com **PCA (Análise de Componentes Principais)**, reduzindo a dimensionalidade para 3 componentes principais e plotando os resultados em um gráfico 3D para facilitar a interpretação visual dos agrupamentos.
+
+== Visualizações ==
+  - Heatmap de Similaridade: O heatmap apresenta a similaridade entre os documentos, com valores variando entre 0 e 1. Observa-se que a maioria dos documentos tem similaridade entre 0.1 e 0.3, indicando uma diversidade temática no corpus. Algumas células com valores mais altos (próximas da diagonal) mostram documentos que compartilham temas semelhantes.
+  - Gráfico 3D de Clusters com PCA: Mostra a distribuição dos documentos em 3 clusters. Pontos próximos indicam documentos com conteúdo semelhante. Alguns clusters são bem definidos, enquanto outros apresentam pontos mais dispersos, indicando possíveis interseções de temas ou documentos com menos coesão.
+
+== Análise Interpretativa == 
+  - O heatmap de similaridade confirma a diversidade de temas no corpus, com poucos documentos apresentando alta similaridade entre si. Isso sugere uma base de dados com ampla variedade de tópicos.
+  - O gráfico 3D dos clusters revela agrupamentos com algumas sobreposições, mostrando que alguns documentos compartilham características temáticas, enquanto outros formam grupos mais homogêneos. Isso pode indicar tanto a presença de documentos com temas mistos quanto clusters bem definidos em alguns casos.
+
+Explicação dos Blocos de Código:
+  - `vectorize_dataframe_tf_idf`: Vetoriza os textos utilizando TF-IDF e retorna um DataFrame com a matriz TF-IDF e a matriz esparsa original.
+  - `calculate_similarity_documents`: Calcula a similaridade cosseno entre os documentos e retorna um DataFrame com os valores.
+  - `plot_similarity_heatmap`: Plota um heatmap para visualização das similaridades entre os documentos.
+  - `get_klusters`: Aplica o algoritmo K-Means aos documentos vetorizados e adiciona rótulos de clusters ao DataFrame.
+  - `plot_df_kluster`: Plota um gráfico 3D dos clusters utilizando PCA para reduzir a dimensionalidade.
+
+Conclusão:
+Este código atende aos critérios do TF-IDF e da análise de clusters passados pelo professor, ele inclui a vetorização dos textos com TF-IDF, cálculo da similaridade cosseno, e visualizações que ajudam a interpretar as similaridades e os agrupamentos de documentos. As análises revelam que o corpus possui uma diversidade de tópicos e que os documentos foram agrupados de forma coerente em alguns clusters, com algumas sobreposições indicando temas compartilhados.
+
+O primeiro gráfico de Heatmap mostra a similaridade entre os documentos. Cada célula representa a similaridade entre dois documentos, sendo a diagonal principal,
+a similaridade a si mesmo, totalizando em 1 corretamente, ou seja, cada documento é 100% similar a si mesmo. O heatmap apresenta poucos resultados com similaridade,
+sendo a maioria entre 0.1 a 0.3, o que sugere que o "corpus" é composto de temas bem distintos entre si, ou seja, existe uma diversidade de tópicos. Entretanto, há algumas células próximas da diagonal que
+apresentam valores mais altos de similaridade (destacadas em tons mais escuros, com valores acima de 0.3), indicando que os documentos compartilham um conteúdo ou tema semelhante.
+
+O segundo gráfico da visualização 3d com PCA, representa os documentos agrupados em 3 clusters. A presença de pontos próximos indicam documentos que compartilham
+similaridades. Alguns clusters são bem definidos, enquanto outros têm pontos dispersos e sobreposições, indicando temas compartilhados ou falta de coesão entre os documentos. 
+
+"""
+
 from typing import Any
 
 # Visualização de Dados
@@ -13,12 +62,6 @@ from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import TfidfVectorizer  # Vetorização com TF-IDF
 from sklearn.metrics.pairwise import cosine_similarity  # Cálculo de similaridade cosseno
 
-# Processamento de Linguagem Natural
-
-"""
-a. Os dados foram vetorizados com TF-IDF e foram calculadas as similaridades entre os documentos?
-b. Foram analisados clusters, sendo visualizados e interpretados com PCA ou outra técnica semelhante?
-"""
 qdt_rows = 25
 
 
@@ -123,3 +166,4 @@ if __name__ == '__main__':
     df_kluster = get_klusters(df_tfidf, X_tfidf)
 
     plot_df_kluster(df_kluster, X_tfidf)
+

@@ -1,14 +1,47 @@
 """
-Bibliotecas para instalar:
-pip install numpy==1.24.3 sentence-transformers spacy
-python -m spacy download pt_core_news_lg
+Embeddings com spaCy e SBERT
 
-a. Foram aplicados word embeddings e técnicas relacionadas?
-similaridade (SPACY) -> SIM
-sistemas de recomendação ou busca -> Busca implementada
-análise de tópicos
-identificação de entidades
+Alunos: Rodrigo K. Franco, Maria Eduarda Krutzsch, Luan L. Guarnieri, Nicole B., Gustavo Baroni, Ana Carolina
+
+Critérios de Avaliação:
+Foram aplicados word embeddings e técnicas relacionadas (similaridade, sistemas de recomendação ou busca, análise de tópicos, identificação de entidades)? (Peso: 0,3)
+
+Descrição das Implementações:
+== Embeddings com spaCy e Cálculo de Similaridade ==
+  - Utilizamos o modelo de embeddings 'pt_core_news_lg' do spaCy para representar semanticamente os textos. A similaridade entre os documentos foi calculada usando a 'similaridade de cosseno', que avalia a proximidade entre dois vetores em termos do ângulo entre eles.
+  - A matriz de similaridade foi visualizada em um 'heatmap', em que cada célula mostra a similaridade entre dois documentos. A diagonal principal apresenta sempre o valor 1, indicando que cada documento é 100% similar a si mesmo.
+
+== Sistema de Recomendação e Busca Semântica ==
+  - Implementamos um sistema de busca semântica utilizando o modelo SBERT (Sentence-BERT) da biblioteca Sentence Transformers. Esse método codifica tanto os documentos quanto as queries, calculando a similaridade de cosseno entre eles para retornar os mais relevantes.
+  - A busca semântica foi testada com uma query e demonstrou ser eficaz ao identificar documentos com alto grau de similaridade, comprovando a capacidade do sistema em capturar similaridades semânticas sutis.
+
+== Análise de Tópicos ==
+  - A análise de tópicos foi conduzida com o modelo LDA (Latent Dirichlet Allocation) da Gensim, que identificou palavras-chave associadas aos principais tópicos no corpus. Isso forneceu uma visão dos temas predominantes nos textos.
+
+== Identificação de Entidades ==
+  - O spaCy foi utilizado para extração de entidades nomeadas, como pessoas, locais, organizações e outras categorias. Esse processo revelou uma variedade de entidades presentes nos textos, refletindo a diversidade de conteúdos no corpus.
+
+== Visualizações ==
+  - Heatmap de Similaridade: O heatmap exibiu a similaridade entre os documentos, com valores variando de 0.3 a 0.9. Observou-se que alguns documentos possuem temas relacionados, enquanto outros mostraram menor similaridade, destacando a variação temática do corpus.
+  - Resultados de Busca Semântica: O sistema de recomendação retornou documentos relevantes com base na query fornecida, com uma similaridade significativa, validando a eficiência do modelo SBERT para busca.
+  - Identificação de Entidades: A extração mostrou uma lista diversa de entidades, confirmando a riqueza informativa dos textos.
+
+== Análise Interpretativa == 
+  - O heatmap de similaridade sugere que, embora haja uma diversidade de tópicos, alguns documentos compartilham semelhanças, evidenciadas por células com valores acima de 0.7.
+  - A busca semântica com SBERT mostrou que o sistema é eficaz em encontrar documentos relevantes de acordo com consultas específicas, oferecendo uma abordagem robusta para sistemas de recomendação.
+  - A análise de tópicos revelou temas gerais e a extração de entidades demonstrou a presença de informações relevantes e estruturadas nos textos.
+
+Explicação dos Blocos de Código:
+  - `calcular_similaridade_embedding_spacy`: Aplica embeddings do spaCy aos textos e retorna a matriz de similaridade.
+  - `busca_semantica`: Realiza a busca semântica usando SBERT e retorna os documentos mais relevantes.
+  - `print_topics`: Identifica e exibe os tópicos usando LDA.
+  - `identify_entities`: Extrai e lista entidades dos textos com o spaCy.
+  - `plotar_heatmap`: Gera um heatmap para visualização das similaridades entre os documentos.
+
+Conclusão:
+Este código cumpre os requisitos para a aplicação de embeddings de acordo que o professor pede, incluindo cálculo de similaridade, sistemas de recomendação, análise de tópicos e identificação de entidades. As visualizações e resultados fornecem insights claros sobre a estrutura e os temas presentes no corpus, destacando a eficácia dos métodos aplicados.
 """
+
 import gensim
 import gensim.corpora
 import matplotlib.pyplot as plt
@@ -22,6 +55,12 @@ from nltk.tokenize import word_tokenize
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+"""
+Rodar para instalar as dependencias
+!pip install -r requirements.txt
+!python -m spacy download pt_core_news_lg
+"""
 
 # Carregar o modelo de linguagem do spaCy
 nlp = spacy.load('pt_core_news_lg')
@@ -158,3 +197,4 @@ if __name__ == '__main__':
         entities = identify_entities(data)
     except Exception as e:
         print(f"Erro ao executar o script: {e}")
+

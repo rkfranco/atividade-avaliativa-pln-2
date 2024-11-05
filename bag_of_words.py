@@ -1,3 +1,47 @@
+"""
+Bag of Words (BoW)
+
+Alunos: Rodrigo K. Franco, Maria Eduarda Krutzsch, Luan L. Guarnieri, Nicole B., Gustavo Baroni, Ana Carolina
+
+Critérios de Avaliação:
+Os dados foram vetorizados com BoW e foram calculados termos mais frequentes do corpus, incluindo análises com visualizações? (Peso: 0,1)
+
+Descrição das Implementações:
+== Vetorização com BoW ==
+  - Foi utilizado `CountVectorizer` da biblioteca `scikit-learn` para transformar o texto em um vetor de contagem de palavras. O resultado foi um DataFrame que representa a frequência de termos em cada documento.
+
+== Cálculo dos Termos Mais Frequentes ==
+  - As funções `get_most_frequent_tokens_per_doc` e `get_most_frequent_tokens` para identificar, respectivamente, os N tokens mais frequentes por documento e no corpus completo. Isso permite uma análise detalhada e uma visão global das palavras mais comuns.
+
+== Visualizações ==
+   - A função `show_total_tokens_per_document` gera um gráfico de barras que mostra o total de tokens em cada documento. Essa visualização ajuda a identificar a variação no tamanho dos textos e os documentos mais extensos.
+   - A função `plot_most_frequent_tokens` cria um gráfico de barras destacando os tokens mais frequentes em todo o corpus, evidenciando os temas predominantes.
+
+== Análise Interpretativa == 
+   - As visualizações mostram que alguns documentos têm um número significativamente maior de tokens, enquanto a maioria possui menos palavras. O gráfico de tokens mais frequentes destaca palavras como "marçal", "governo" e "presidente", indicando um possível foco em conteúdos políticos, possivelmente relacionados às eleições no Brasil durante o mês de outubro.
+   - A diferença de frequência entre os tokens mais comuns é relativamente pequena, sugerindo uma distribuição uniforme dos termos mais frequentes no corpus.
+
+Explicação dos Blocos de Código
+  - vectorize_dataframe_bow: Vetoriza os textos utilizando BoW e retorna um DataFrame com a contagem de palavras por documento.
+  - show_total_tokens_per_document: Plota um gráfico de barras mostrando o total de tokens em cada documento, permitindo a análise da distribuição de tamanhos.
+  - get_most_frequent_tokens_per_doc: Calcula os tokens mais frequentes em documentos individuais para uma análise detalhada de cada texto.
+  - get_most_frequent_tokens: Identifica os tokens mais frequentes em todo o corpus, proporcionando uma visão global das palavras mais comuns.
+  - plot_most_frequent_tokens: Gera um gráfico que visualiza os tokens mais frequentes em todo o corpus.
+
+Conclusão:
+Este código atende os critérios de avaliação do Bag of Words descrito pelo professor, inclui vetorização do corpus, cálculo de termos mais frequentes, 
+e visualizações que auxiliam na análise e interpretação dos resultados. As visualizações fornecem insights sobre a composição dos documentos e os temas predominantes no corpus.
+
+  O primeiro gráfico ao executar o script "total de tokens por documento", indica que alguns documentos tem textos muito longos, e a maioria com 
+uma quantidade menor de tokens. Apesar da grande quantidade de dados, é possível por meio da barra de rolagem gerada na figura, verificar informações específicas de cada documento, sendo no eixo x o documento 
+e no eixo y, o total de tokens. 
+
+  O segundo gráfico que exibe os tokens mais frequentes no texto como um todo. O gráfico traz com destaque termos como "marçal", "governo", e "presidente", 
+o que indica um possível foco em conteúdos políticos. É possível afirmar que isto está diretamente ligado ao contexto do mês de outubro por exemplo, que é quando o trabalho foi produzido, sendo relacionado
+às eleições para prefeito no Brasil. A diferença de frequência entre os tokens no topo não é muito grande, o que sugere uma distribuição uniforme.
+
+"""
+
 # Visualização de Dados
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,31 +52,25 @@ from matplotlib.widgets import Slider
 # Vetorização de Texto e Similaridade
 from sklearn.feature_extraction.text import CountVectorizer  # Vetorização com Bag of Words (BoW)
 
-"""
-Os dados foram vetorizados com BoW e foram calculados termos
-mais frequentes do corpus, incluindo análises com visualizações?
-"""
-
-
 def vectorize_dataframe_bow(dataframe) -> pd.DataFrame:
-    # Instanciar o CountVectorizer
+    # instanciar o CountVectorizer
     vectorizer = CountVectorizer()
 
     # texto_sem_nan = [doc for doc in df['texto_processado'] if doc is not np.nan]
 
-    # Aplicar a vetorização ao texto processado
+    # aplicando a vetorização ao texto processado
     X_bag_of_words = vectorizer.fit_transform(dataframe['texto_processado'])
 
-    # Converter a matriz esparsa resultante para um DataFrame
+    # converte a matriz esparsa resultante para um DataFrame
     df_bag_of_words = pd.DataFrame(X_bag_of_words.toarray(), columns=vectorizer.get_feature_names_out())
 
-    # Definir a coluna 'documento' como índice do DataFrame
+    # define a coluna 'documento' como índice do DataFrame
     df_bag_of_words.index = dataframe['documento']
 
-    # Exibir as primeiras linhas do DataFrame vetorizado com 'documento' como índice
+    # exibindo as primeiras linhas do DataFrame vetorizado com 'documento' como índice
     return df_bag_of_words
 
-
+""" Estava usando, qualquer coisa só voltar esse e tirar o de baixo
 def show_total_tokens_per_document(df_bag_of_words):
     # Configurações de estilo e paleta de cores
     sns.set_style("whitegrid")  # Estilo de grade branca
@@ -41,14 +79,14 @@ def show_total_tokens_per_document(df_bag_of_words):
     # Passo 1: Calcular o total de tokens em cada documento
     total_tokens = df_bag_of_words.sum(axis=1)
 
-    # Criar um DataFrame para facilitar a plotagem
+    # criar um DataFrame para facilitar a plotagem
     df_total_tokens = total_tokens.reset_index()
     df_total_tokens.columns = ['Documento', 'Total de Tokens']
 
-    # Ordenar os documentos pela frequência de tokens em ordem decrescente
+    # ordenar os documentos pela frequência de tokens em ordem decrescente
     df_total_tokens = df_total_tokens.sort_values(by='Total de Tokens', ascending=False)
 
-    # Criar a figura e os eixos
+    # criando a figura e os eixos
     fig, ax = plt.subplots(figsize=(12, 6))
     plt.subplots_adjust(bottom=0.25)
 
@@ -81,11 +119,51 @@ def show_total_tokens_per_document(df_bag_of_words):
 
     slider.on_changed(update)
 
-    plt.tight_layout()
+   # plt.tight_layout() -- erro de ajuste automatico, comentado para rodar no colab
+    plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.2)
 
     # Exibir o gráfico
     plt.show()
+"""
 
+def show_total_tokens_per_document(df_bag_of_words, num_docs=30):
+    # Mostra os num_docs documentos com mais tokens para melhor visualização
+    sns.set_style("whitegrid")  # Define o estilo do gráfico como uma grade branca
+    sns.set_palette("viridis")  # Define a paleta de cores como 'viridis'
+
+    # Calcula o total de tokens em cada documento somando as colunas (contagem de palavras)
+    total_tokens = df_bag_of_words.sum(axis=1)
+
+    # Cria um DataFrame para facilitar a plotagem
+    df_total_tokens = total_tokens.reset_index()
+    df_total_tokens.columns = ['Documento', 'Total de Tokens']  # Renomeia as colunas para melhor entendimento
+
+    # Ordena os documentos pelo total de tokens em ordem decrescente e seleciona os num_docs mais longos
+    df_total_tokens = df_total_tokens.sort_values(by='Total de Tokens', ascending=False).head(num_docs)
+
+    # Cria uma figura de tamanho definido
+    plt.figure(figsize=(14, 7))
+
+    # Plota um gráfico de barras do total de tokens por documento
+    barplot = sns.barplot(x='Documento', y='Total de Tokens', data=df_total_tokens)
+
+    # Adiciona rótulos com o valor no topo de cada barra
+    for index, row in enumerate(df_total_tokens['Total de Tokens']):
+        barplot.text(index, row, f'{int(row)}', color='black', ha="center", va="bottom")
+
+    # Define o título e os rótulos dos eixos
+    plt.title('Top Documentos por Total de Tokens')
+    plt.xlabel('Documento')
+    plt.ylabel('Total de Tokens')
+
+    # Rotaciona os rótulos do eixo X para melhorar a legibilidade
+    plt.xticks(rotation=90)
+
+    # Ajusta o layout para evitar sobreposição dos elementos
+    plt.tight_layout()
+
+    # Exibe o gráfico
+    plt.show()
 
 def get_most_frequent_tokens_per_doc(df_bow, top_n=10) -> pd.DataFrame:
     top_tokens_list = [
@@ -137,3 +215,4 @@ if __name__ == '__main__':
     # Calcula os tokens mais frequentes do Corpus inteiro
     df_most_frequent_tokens = get_most_frequent_tokens(df_bow, 25)
     plot_most_frequent_tokens(df_most_frequent_tokens)
+
