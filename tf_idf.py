@@ -149,21 +149,30 @@ def plot_df_kluster(df_documents, tfidf_matrix, num_clusters=3):
 
 if __name__ == '__main__':
     # Comparação de apenas 25 documentos, se todos os documentos fossem utilizados o gráfico ficaria muito poluído e ilegível
-    df = pd.read_csv(r'textos_processados.csv')[:qdt_rows]
+    df_25 = pd.read_csv(r'textos_processados.csv')[:qdt_rows]
+
+    # Utilizando texto sem pontuação
+    df_25['texto_processado'] = pd.read_csv(
+        'uol_news_data.csv',
+        sep=';',
+        encoding='utf-8-sig')['content_without_pontuation'][:qdt_rows]
+
+    df_25_tfidf, X_25_tfidf = vectorize_dataframe_tf_idf(df_25)
+
+    df_similarity = calculate_similarity_documents(df_25, X_25_tfidf)
+
+    plot_similarity_heatmap(df_similarity)
+
+    df = pd.read_csv(r'textos_processados.csv')[:200]
 
     # Utilizando texto sem pontuação
     df['texto_processado'] = pd.read_csv(
         'uol_news_data.csv',
         sep=';',
-        encoding='utf-8-sig')['content_without_pontuation'][:qdt_rows]
+        encoding='utf-8-sig')['content_without_pontuation'][:200]
 
     df_tfidf, X_tfidf = vectorize_dataframe_tf_idf(df)
-
-    df_similarity = calculate_similarity_documents(df, X_tfidf)
-
-    plot_similarity_heatmap(df_similarity)
 
     df_kluster = get_klusters(df_tfidf, X_tfidf)
 
     plot_df_kluster(df_kluster, X_tfidf)
-
