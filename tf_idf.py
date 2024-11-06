@@ -62,8 +62,6 @@ from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import TfidfVectorizer  # Vetorização com TF-IDF
 from sklearn.metrics.pairwise import cosine_similarity  # Cálculo de similaridade cosseno
 
-qdt_rows = 25
-
 
 def vectorize_dataframe_tf_idf(dataframe) -> tuple[DataFrame, Any]:
     # Passo 1: Instanciar o TfidfVectorizer
@@ -149,13 +147,13 @@ def plot_df_kluster(df_documents, tfidf_matrix, num_clusters=3):
 
 if __name__ == '__main__':
     # Comparação de apenas 25 documentos, se todos os documentos fossem utilizados o gráfico ficaria muito poluído e ilegível
-    df_25 = pd.read_csv(r'textos_processados.csv')[:qdt_rows]
+    df_25 = pd.read_csv(r'textos_processados.csv')[:25]
 
     # Utilizando texto sem pontuação
     df_25['texto_processado'] = pd.read_csv(
         'uol_news_data.csv',
         sep=';',
-        encoding='utf-8-sig')['content_without_pontuation'][:qdt_rows]
+        encoding='utf-8-sig')['content_without_pontuation'][:25]
 
     df_25_tfidf, X_25_tfidf = vectorize_dataframe_tf_idf(df_25)
 
